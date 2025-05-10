@@ -3,7 +3,7 @@ import Image from "next/image"
 
 export default function CardPostagem(){
     return(
-        <Link href='#'
+        <Link href='./post/1'
             className="flex justify-center gap-10 bg-[#D3D3D3] mb-10 p-10
             transition-all duration-300 hover:bg-[#c0c0c0] hover:shadow-lg 
             hover:-translate-y-1 rounded"
