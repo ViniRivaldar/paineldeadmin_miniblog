@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { FaTrash, FaEdit } from 'react-icons/fa'
+import { FaTrash} from 'react-icons/fa'
 
 export default function CardPostagem(){
     return(
@@ -33,12 +33,7 @@ export default function CardPostagem(){
                 </div>
             </Link>
 
-            <div className="flex justify-end gap-2">
-                <button 
-                className="p-2 bg-blue-500 text-white rounded hover:bg-blue-400 cursor-pointer"
-                >
-                <FaEdit size={20} />
-                </button>
+            <div className="flex justify-end">
                 <button 
                 className="p-2 bg-red-500 text-white rounded hover:bg-red-400 cursor-pointer"
                 >
