@@ -1,8 +1,21 @@
 import Image from "next/image"
+import Link from "next/link"
+import { FaArrowLeft } from "react-icons/fa"
 
 export default function CardEditPost(){
     return(
-        <div className="w-[1192px] bg-[#D3D3D3] mt-10 mb-10 p-10 flex flex-col items-center gap-10 rounded">
+        <div 
+        className="relative w-[1192px] bg-[#D3D3D3] 
+        mt-10 mb-10 p-10 flex flex-col items-center gap-10 rounded"
+        >
+
+            
+            <div className="absolute top-7 left-10">
+                <Link href='/'>
+                    <FaArrowLeft className='w-6 h-6 hover:text-white text-black' />
+                </Link>
+            </div>
+
             <Image
             src='/download.jpg'
             alt="imagen"

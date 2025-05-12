@@ -5,6 +5,7 @@ import Link from "next/link";
 import useAuthStore from '../store/authStore';
 import CardPostagem from "./components/CardPostagem";
 import { useRouter } from 'next/navigation';
+import {FaArrowLeft} from 'react-icons/fa'
 
 export default function Home() {
   const { listenForAuth, user } = useAuthStore();
@@ -50,6 +51,10 @@ export default function Home() {
 
   return (
     <div className="w-[1192px] bg-[#191970] mt-10 mb-10 p-10 rounded">
+    
+      <Link href={process.env.NEXT_PUBLIC_URL}>
+        <FaArrowLeft className='w-6 h-6 text-white hover:text-black'/>
+      </Link>
       <h1 className="font-anton font-bold text-5xl text-white text-center mb-10">Painel Administrativo</h1>
       
       <Link
