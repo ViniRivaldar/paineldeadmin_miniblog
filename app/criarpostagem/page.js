@@ -5,10 +5,11 @@ import { FaArrowLeft } from "react-icons/fa"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import PostStore from '../../store/postStore'
+import RichEditor from "./components/RichEditor"
 
 export default function CriarPostagem(){
 
-    const { register, handleSubmit, reset } = useForm()
+    const { register, handleSubmit, reset, watch, setValue  } = useForm()
     const { criarPost, loading, error, successMessage, clearStatus } = PostStore()
 
     const onSubmit = async (data) => {
@@ -20,6 +21,10 @@ export default function CriarPostagem(){
             reset()
         }
     }
+
+    useEffect(() => {
+        register('content', { required: true })
+    }, [register])
 
     useEffect(() => {
         if (error || successMessage) {
@@ -55,12 +60,9 @@ export default function CriarPostagem(){
                 transition-all duration-200 ease-in-out
                 outline-none p-2'
                 />
-                <textarea 
-                placeholder="digite seu post" 
-                {...register('content',{required: true})}
-                className=" text-center w-full h-[800px] resize-none border-2 border-black bg-[#D9D9D9]
-                focus:border-[#191970] focus:shadow-[0_0_5px_#191970] 
-                outline-none p-10"
+                <RichEditor
+                    value={watch('content')}
+                    onChange={(html) => setValue('content', html)}
                 />
 
                 <button 
