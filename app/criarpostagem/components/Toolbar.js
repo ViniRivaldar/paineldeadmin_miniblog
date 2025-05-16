@@ -1,34 +1,46 @@
-import { 
-  FaBold, 
-  FaItalic, 
-  FaUnderline, 
-  FaHeading, 
-  FaListUl, 
-  FaListOl 
+import {
+  FaBold, FaItalic, FaUnderline, FaHeading,
+  FaListUl, FaListOl, FaImage
 } from 'react-icons/fa'
+import { useRef } from 'react'
+import FotoPostStore from '../../../store/fotoPostStore'
+
+const btnBase = 'p-2 rounded border cursor-pointer hover:bg-gray-200 transition'
 
 export default function Toolbar({ editor, headerLevel, setHeaderLevel }) {
-  if (!editor) {
-    return null
+  const fileInputRef = useRef(null)
+  const { addTempImage } = FotoPostStore()
+
+  if (!editor) return null
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const tempURL = addTempImage(file)
+      editor.chain().focus().insertContent(`<img src="${tempURL}" alt="imagem temporária" />`).run()
+      e.target.value = null
+    }
   }
+
+  const renderButton = (icon, action, isActive, title) => (
+    <button
+      type="button"
+      onClick={action}
+      className={`${btnBase} ${isActive ? 'bg-[#191970] text-white' : 'bg-white'}`}
+      title={title}
+    >
+      {icon}
+    </button>
+  )
 
   return (
     <div className="flex items-center gap-2 mb-4 p-2 bg-gray-100 rounded-md border border-gray-300 flex-wrap">
+      {/* Heading */}
       <div className="flex items-center mr-2">
-        <button
-          type="button"
-          onClick={() => {
-            if (headerLevel) {
-              editor.chain().focus().toggleHeading({ level: headerLevel }).run()
-            }
-          }}
-          className={`px-2 py-1 rounded border flex items-center justify-center ${
-            editor.isActive('heading') ? 'bg-[#191970] text-white' : 'bg-white'
-          }`}
-        >
-          <FaHeading size={16} />
-        </button>
-        
+        {renderButton(<FaHeading size={16} />, () => {
+          if (headerLevel) editor.chain().focus().toggleHeading({ level: headerLevel }).run()
+        }, editor.isActive('heading'), 'Título')}
+
         <select
           value={headerLevel}
           onChange={(e) => {
@@ -40,68 +52,42 @@ export default function Toolbar({ editor, headerLevel, setHeaderLevel }) {
         >
           <option value="2">H2</option>
           <option value="3">H3</option>
-          <option value="3">H4</option>
+          <option value="4">H4</option>
         </select>
       </div>
 
-      <div className="h-6 w-px bg-gray-300 mx-1"></div>
+      <div className="h-6 w-px bg-gray-300 mx-1" />
 
+      {/* Formatting */}
+      {renderButton(<FaBold size={16} />, () => editor.chain().focus().toggleBold().run(), editor.isActive('bold'), 'Negrito')}
+      {renderButton(<FaItalic size={16} />, () => editor.chain().focus().toggleItalic().run(), editor.isActive('italic'), 'Itálico')}
+      {renderButton(<FaUnderline size={16} />, () => editor.chain().focus().toggleUnderline().run(), editor.isActive('underline'), 'Sublinhado')}
+
+      <div className="h-6 w-px bg-gray-300 mx-1" />
+
+      {/* Lists */}
+      {renderButton(<FaListUl size={16} />, () => editor.chain().focus().toggleBulletList().run(), editor.isActive('bulletList'), 'Lista com marcadores')}
+      {renderButton(<FaListOl size={16} />, () => editor.chain().focus().toggleOrderedList().run(), editor.isActive('orderedList'), 'Lista numerada')}
+
+      <div className="h-6 w-px bg-gray-300 mx-1" />
+
+      {/* Imagem */}
       <button
         type="button"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={`p-2 rounded border ${
-          editor.isActive('bold') ? 'bg-[#191970] text-white' : 'bg-white'
-        }`}
-        title="Negrito (Ctrl+B)"
+        onClick={() => fileInputRef.current?.click()}
+        className={`${btnBase} bg-white`}
+        title="Inserir imagem"
       >
-        <FaBold size={16} />
+        <FaImage size={16} />
       </button>
 
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={`p-2 rounded border ${
-          editor.isActive('italic') ? 'bg-[#191970] text-white' : 'bg-white'
-        }`}
-        title="Itálico (Ctrl+I)"
-      >
-        <FaItalic size={16} />
-      </button>
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        className={`p-2 rounded border ${
-          editor.isActive('underline') ? 'bg-[#191970] text-white' : 'bg-white'
-        }`}
-        title="Sublinhado (Ctrl+U)"
-      >
-        <FaUnderline size={16} />
-      </button>
-
-      <div className="h-6 w-px bg-gray-300 mx-1"></div>
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={`p-2 rounded border ${
-          editor.isActive('bulletList') ? 'bg-[#191970] text-white' : 'bg-white'
-        }`}
-        title="Lista com marcadores"
-      >
-        <FaListUl size={16} />
-      </button>
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={`p-2 rounded border ${
-          editor.isActive('orderedList') ? 'bg-[#191970] text-white' : 'bg-white'
-        }`}
-        title="Lista numerada"
-      >
-        <FaListOl size={16} />
-      </button>
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
     </div>
   )
 }
