@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
@@ -9,6 +10,7 @@ import FotoPostStore from '../../store/fotoPostStore'
 import RichEditor from "./components/RichEditor"
 
 export default function CriarPostagem() {
+  const router = useRouter()
   const { register, handleSubmit, reset, watch, setValue } = useForm()
   const { criarPost, loading, error, successMessage, clearStatus, clearLastCreatedPost } = PostStore()
   const { uploadAllTempImages, clearStatus: clearFotoStatus } = FotoPostStore()
@@ -25,6 +27,7 @@ export default function CriarPostagem() {
 
     if (postCriado?.id) {
       await uploadAllTempImages(postCriado.id);
+      router.push('/')
       reset();
     }
   };
